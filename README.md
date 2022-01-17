@@ -1,6 +1,7 @@
 # Make Your Blackjack Code More Testable
 
-This is the starter code base for the "Make Code More Testable" class. Also known as "Refactoring to Testable Code".
+This is the starter code base for the "Make Your Design More Testable" class.
+Also known as "Refactoring to Hexagonal Architecture".
 
 # Requirements
 

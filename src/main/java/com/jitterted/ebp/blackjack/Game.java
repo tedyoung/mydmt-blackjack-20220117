@@ -72,7 +72,7 @@ public class Game {
     }
 
     private void dealRoundOfCards() {
-        // why: players first because this is the rule
+        // why: players first because this is the rule of Blackjack
         playerHand.drawFrom(deck);
         dealerHand.drawFrom(deck);
     }
@@ -92,7 +92,7 @@ public class Game {
     }
 
     private void dealerTurn() {
-        // Dealer makes its choice automatically based on a simple heuristic (<=16 must hit, =>17 must stand)
+        // Dealer makes its choice automatically based on a simple heuristic (value of hand: <=16 must hit, =>17 must stand)
         if (!playerHand.isBusted()) {
             while (dealerHand.dealerMustDrawCard()) {
                 dealerHand.drawFrom(deck);
