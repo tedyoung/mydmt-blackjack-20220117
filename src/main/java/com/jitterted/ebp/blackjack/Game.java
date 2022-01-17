@@ -131,7 +131,7 @@ public class Game {
         System.out.println("Dealer has: ");
         System.out.println(dealerHand.displayFirstCard()); // first card is Face Up
 
-        // second card is the hole card, which is hidden
+        // second card is the Dealer's hole card, which is hidden
         displayBackOfCard();
 
         System.out.println();
