@@ -9,8 +9,7 @@ class GameOutcomeTest {
 
     @Test
     public void playerBeatsDealer() {
-        Deck stubDeck = new StubDeck(Rank.TEN,   Rank.EIGHT,
-                                     Rank.QUEEN, Rank.JACK);
+        Deck stubDeck = StubDeck.playerBeatsDealerUponInitialDeal();
         Game game = new Game(stubDeck);
         game.initialDeal();
 
@@ -22,12 +21,9 @@ class GameOutcomeTest {
                 .isEqualTo("You beat the Dealer! 💵");
     }
 
-
     @Test
     public void playerHitsAndGoesBustAndLoses() throws Exception {
-        Deck stubDeck = new StubDeck(Rank.TEN,   Rank.EIGHT,
-                                     Rank.QUEEN, Rank.JACK,
-                                     Rank.THREE);
+        Deck stubDeck = StubDeck.playerHitsAndGoesBust();
         Game game = new Game(stubDeck);
         game.initialDeal();
 
