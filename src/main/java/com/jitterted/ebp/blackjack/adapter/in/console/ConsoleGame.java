@@ -16,56 +16,31 @@ public class ConsoleGame {
         this.game = game;
     }
 
-    public static void resetScreen() {
-        System.out.println(ansi().reset());
+    public void start() {
+        displayWelcomeScreen();
+        waitForEnterFromUser();
+
+        game.initialDeal();
+
+        playerPlays();
+
+        game.dealerTurn();
+
+        displayFinalGameState();
+
+        System.out.println(game.determineOutcome());
+
+        resetScreen();
     }
 
-    public static void waitForEnterFromUser() {
-        System.out.println(ansi()
-                                   .cursor(3, 1)
-                                   .fgBrightBlack().a("Hit [ENTER] to start..."));
 
-        System.console().readLine();
-    }
-
-    public static void displayWelcomeScreen() {
-        AnsiConsole.systemInstall();
-        System.out.println(ansi()
-                                   .bgBright(Ansi.Color.WHITE)
-                                   .eraseScreen()
-                                   .cursor(1, 1)
-                                   .fgGreen().a("Welcome to")
-                                   .fgRed().a(" JitterTed's")
-                                   .fgBlack().a(" BlackJack game"));
-    }
-
-    public static String inputFromPlayer() {
-        System.out.println("[H]it or [S]tand?");
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
-    }
-
-    public static void displayBackOfCard() {
-        System.out.print(
-                ansi()
-                        .cursorUp(7)
-                        .cursorRight(12)
-                        .a("┌─────────┐").cursorDown(1).cursorLeft(11)
-                        .a("│░░░░░░░░░│").cursorDown(1).cursorLeft(11)
-                        .a("│░ J I T ░│").cursorDown(1).cursorLeft(11)
-                        .a("│░ T E R ░│").cursorDown(1).cursorLeft(11)
-                        .a("│░ T E D ░│").cursorDown(1).cursorLeft(11)
-                        .a("│░░░░░░░░░│").cursorDown(1).cursorLeft(11)
-                        .a("└─────────┘"));
-    }
-
-    public static void displayGameState(Game game) {
+    private void displayGameState() {
         System.out.print(ansi().eraseScreen().cursor(1, 1));
         System.out.println("Dealer has: ");
         System.out.println(ConsoleHand.displayFirstCard(game.dealerHand())); // first card is Face Up
 
         // second card is the Dealer's hole card, which is hidden
-        displayBackOfCard();
+        ConsoleHand.displayBackOfCard();
 
         System.out.println();
         System.out.println("Player has: ");
@@ -73,7 +48,7 @@ public class ConsoleGame {
         System.out.println(" (" + game.playerHand().value() + ")");
     }
 
-    public static void displayFinalGameState(Game game) {
+    private void displayFinalGameState() {
         System.out.print(ansi().eraseScreen().cursor(1, 1));
         System.out.println("Dealer has: ");
         System.out.println(ConsoleHand.cardsAsString(game.dealerHand()));
@@ -85,37 +60,50 @@ public class ConsoleGame {
         System.out.println(" (" + game.playerHand().value() + ")");
     }
 
-    public void start() {
-        displayWelcomeScreen();
-        waitForEnterFromUser();
-
-        game.initialDeal();
-
-        playerPlays();
-
-        game.dealerTurn();
-
-        displayFinalGameState(game);
-
-        System.out.println(game.determineOutcome());
-
-        resetScreen();
-    }
-
-    public void playerPlays() {
+    private void playerPlays() {
         while (!game.isPlayerDone()) {
-            displayGameState(game);
+            displayGameState();
             String command = inputFromPlayer();
             handle(command);
         }
     }
 
-    public void handle(String command) {
+    private void handle(String command) {
         if (command.toLowerCase().startsWith("h")) {
             game.playerHits();
         } else if (command.toLowerCase().startsWith("s")) {
             game.playerStands();
         }
     }
+
+    private String inputFromPlayer() {
+        System.out.println("[H]it or [S]tand?");
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
+
+    private void resetScreen() {
+        System.out.println(ansi().reset());
+    }
+
+    private void waitForEnterFromUser() {
+        System.out.println(ansi()
+                                   .cursor(3, 1)
+                                   .fgBrightBlack().a("Hit [ENTER] to start..."));
+
+        System.console().readLine();
+    }
+
+    private void displayWelcomeScreen() {
+        AnsiConsole.systemInstall();
+        System.out.println(ansi()
+                                   .bgBright(Ansi.Color.WHITE)
+                                   .eraseScreen()
+                                   .cursor(1, 1)
+                                   .fgGreen().a("Welcome to")
+                                   .fgRed().a(" JitterTed's")
+                                   .fgBlack().a(" BlackJack game"));
+    }
+
 
 }
