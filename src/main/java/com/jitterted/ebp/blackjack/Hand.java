@@ -13,7 +13,7 @@ public class Hand {
     public Hand() {
     }
 
-    private int value() {
+    public int value() {
         int handValue = cards
                 .stream()
                 .mapToInt(Card::rankValue)
@@ -40,10 +40,6 @@ public class Hand {
         return value() <= 16;
     }
 
-    void display() {
-        System.out.println(ConsoleHand.cardsAsString(this));
-    }
-
     // SNAPSHOT of information ("point in time")
     // immutable: don't want clients/consumers to change this object
     public List<Card> cards() {
@@ -64,10 +60,6 @@ public class Hand {
 
     boolean beats(Hand hand) {
         return hand.value() < value();
-    }
-
-    String displayValue() {
-        return String.valueOf(value());
     }
 
     public boolean valueEquals(int target) {
