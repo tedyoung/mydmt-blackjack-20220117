@@ -16,8 +16,8 @@ class GameOutcomeTest {
         game.playerStands(); // make sure the player stands
         game.dealerTurn(); // dealer needs to take its turn
 
-        String outcome = game.determineOutcome();
-        assertThat(outcome)
+        GameOutcome outcome = game.determineOutcome();
+        assertThat(outcome.display())
                 .isEqualTo("You beat the Dealer! 💵");
     }
 
@@ -29,7 +29,7 @@ class GameOutcomeTest {
 
         game.playerHits();
 
-        assertThat(game.determineOutcome())
+        assertThat(game.determineOutcome().display())
                 .isEqualTo("You Busted, so you lose.  💸");
     }
 
