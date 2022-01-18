@@ -23,15 +23,18 @@ class GameOutcomeTest {
     }
 
 
-//    @Test
-//    public void playerHitsAndGoesBustAndLoses() throws Exception {
-//        Game game = new Game();
-//        game.initialDeal();
-//
-//        game.playerHits();
-//
-//        assertThat(game.determineOutcome())
-//                .isEqualTo("You Busted, so you lose.  💸");
-//    }
+    @Test
+    public void playerHitsAndGoesBustAndLoses() throws Exception {
+        Deck stubDeck = new StubDeck(Rank.TEN,   Rank.EIGHT,
+                                     Rank.QUEEN, Rank.JACK,
+                                     Rank.THREE);
+        Game game = new Game(stubDeck);
+        game.initialDeal();
+
+        game.playerHits();
+
+        assertThat(game.determineOutcome())
+                .isEqualTo("You Busted, so you lose.  💸");
+    }
 
 }
