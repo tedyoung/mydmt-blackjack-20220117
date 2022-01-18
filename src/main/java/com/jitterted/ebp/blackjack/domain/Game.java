@@ -1,13 +1,5 @@
 package com.jitterted.ebp.blackjack.domain;
 
-import com.jitterted.ebp.blackjack.adapter.in.console.ConsoleHand;
-import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.AnsiConsole;
-
-import java.util.Scanner;
-
-import static org.fusesource.jansi.Ansi.ansi;
-
 public class Game {
 
     private final Deck deck;
@@ -15,29 +7,6 @@ public class Game {
     private final Hand dealerHand = new Hand();
     private final Hand playerHand = new Hand();
     private boolean playerDone;
-
-    public static void resetScreen() {
-        System.out.println(ansi().reset());
-    }
-
-    public static void waitForEnterFromUser() {
-        System.out.println(ansi()
-                                   .cursor(3, 1)
-                                   .fgBrightBlack().a("Hit [ENTER] to start..."));
-
-        System.console().readLine();
-    }
-
-    public static void displayWelcomeScreen() {
-        AnsiConsole.systemInstall();
-        System.out.println(ansi()
-                                   .bgBright(Ansi.Color.WHITE)
-                                   .eraseScreen()
-                                   .cursor(1, 1)
-                                   .fgGreen().a("Welcome to")
-                                   .fgRed().a(" JitterTed's")
-                                   .fgBlack().a(" BlackJack game"));
-    }
 
     public Game() {
         deck = new Deck();
@@ -77,50 +46,21 @@ public class Game {
         }
     }
 
-    public String inputFromPlayer() {
-        System.out.println("[H]it or [S]tand?");
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
+    // "Query" Rule: SNAPSHOT (point in time), does not allow
+    // clients to change internal state (immutable/unmodifiable/copy)
+    // 0 - Hand - is mutable and not snapshot --> *NO*
+    // 1 - Deep Copy of Hand - deep clone() --> *NO* misleads clients to think they can change it
+    // 2 - DTO - cards (first card), hand's value --> pure data, "JavaBean", only lives in Adapters
+    // 3 - Interface - exposes just the cards & value --> only queries of Hand: ReadOnlyHand,
+    //           be careful that the interface isn't a "view" on the Hand that can change (*NO*)
+    // 4 - Hand Value Object ("HandView") - cards, hand's value --> Domain, often just data, domain-meaningful methods
+    // 5 - Subclass that throws exception for command methods --> *NO* not nice to take away commands
+    public Hand playerHand() {
+        return playerHand;
     }
 
-    public void displayGameState() {
-        System.out.print(ansi().eraseScreen().cursor(1, 1));
-        System.out.println("Dealer has: ");
-        System.out.println(ConsoleHand.displayFirstCard(dealerHand)); // first card is Face Up
-
-        // second card is the Dealer's hole card, which is hidden
-        displayBackOfCard();
-
-        System.out.println();
-        System.out.println("Player has: ");
-        System.out.println(ConsoleHand.cardsAsString(playerHand));
-        System.out.println(" (" + playerHand.value() + ")");
-    }
-
-    private void displayBackOfCard() {
-        System.out.print(
-                ansi()
-                        .cursorUp(7)
-                        .cursorRight(12)
-                        .a("┌─────────┐").cursorDown(1).cursorLeft(11)
-                        .a("│░░░░░░░░░│").cursorDown(1).cursorLeft(11)
-                        .a("│░ J I T ░│").cursorDown(1).cursorLeft(11)
-                        .a("│░ T E R ░│").cursorDown(1).cursorLeft(11)
-                        .a("│░ T E D ░│").cursorDown(1).cursorLeft(11)
-                        .a("│░░░░░░░░░│").cursorDown(1).cursorLeft(11)
-                        .a("└─────────┘"));
-    }
-
-    public void displayFinalGameState() {
-        System.out.print(ansi().eraseScreen().cursor(1, 1));
-        System.out.println("Dealer has: ");
-        System.out.println(ConsoleHand.cardsAsString(dealerHand));
-        System.out.println(" (" + dealerHand.value() + ")");
-
-        System.out.println();
-        System.out.println("Player has: ");
-        System.out.println(ConsoleHand.cardsAsString(playerHand));
-        System.out.println(" (" + playerHand.value() + ")");
+    public Hand dealerHand() {
+        return dealerHand;
     }
 
 
