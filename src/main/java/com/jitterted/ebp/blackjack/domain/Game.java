@@ -16,7 +16,7 @@ public class Game {
         this.gameMonitor = game -> {};
     }
 
-    public Game(GameMonitor gameMonitor, Deck deck) {
+    public Game(Deck deck, GameMonitor gameMonitor) {
         this.gameMonitor = gameMonitor;
         this.deck = deck;
     }
@@ -81,6 +81,7 @@ public class Game {
     public void playerHits() {
         playerHand.drawFrom(deck);
         playerDone = playerHand.isBusted();
+        gameMonitor.roundCompleted(this);
     }
 
     public void playerStands() {
