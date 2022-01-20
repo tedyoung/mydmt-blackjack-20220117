@@ -1,14 +1,23 @@
 package com.jitterted.ebp.blackjack.domain;
 
+import com.jitterted.ebp.blackjack.domain.port.GameMonitor;
+
 public class Game {
 
     private final Deck deck;
 
     private final Hand dealerHand = new Hand();
     private final Hand playerHand = new Hand();
+    private final GameMonitor gameMonitor;
     private boolean playerDone;
 
     public Game(Deck deck) {
+        this.deck = deck;
+        this.gameMonitor = game -> {};
+    }
+
+    public Game(GameMonitor gameMonitor, Deck deck) {
+        this.gameMonitor = gameMonitor;
         this.deck = deck;
     }
 
@@ -77,6 +86,7 @@ public class Game {
     public void playerStands() {
         playerDone = true;
         dealerTurn();
+        gameMonitor.roundCompleted(this);
     }
 
     public boolean isPlayerDone() {
