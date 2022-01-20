@@ -21,15 +21,6 @@ public class Game {
         this.deck = deck;
     }
 
-    public void initialDeal() {
-        dealRoundOfCards();
-        dealRoundOfCards();
-        if (playerHand.hasBlackjack()) {
-            playerDone = true;
-            gameMonitor.roundCompleted(this);
-        }
-    }
-
     private void dealRoundOfCards() {
         // why: players first because this is the rule of Blackjack
         playerHand.drawFrom(deck);
@@ -79,19 +70,39 @@ public class Game {
         return dealerHand;
     }
 
+    public void initialDeal() {
+        dealRoundOfCards();
+        dealRoundOfCards();
+        updatePlayerDoneTo(playerHand.hasBlackjack());
+    }
+
     public void playerHits() {
         playerHand.drawFrom(deck);
-        playerDone = playerHand.isBusted();
-        if (playerDone) {
+        updatePlayerDoneTo(playerHand.isBusted());
+    }
+
+    public void playerStands() {
+        dealerTurn();
+        updatePlayerDoneTo(true);
+    }
+
+    private void updatePlayerDoneTo(boolean playerIsDone) {
+        if (playerIsDone) {
+            playerDone = true;
             gameMonitor.roundCompleted(this);
         }
     }
 
-    public void playerStands() {
-        playerDone = true;
-        dealerTurn();
-        gameMonitor.roundCompleted(this);
-    }
+    /*
+    gameService.currentPlayerStands() {
+        // repo.findGame()
+       game.playerStands();
+       if (game.isPlayerDone()) {
+         monitor....
+       }
+       repo.save(game)
+     }
+     */
 
     public boolean isPlayerDone() {
         return playerDone;

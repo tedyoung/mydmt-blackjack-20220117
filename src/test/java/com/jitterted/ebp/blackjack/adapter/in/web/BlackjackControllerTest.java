@@ -18,7 +18,7 @@ class BlackjackControllerTest {
 
     @Test
     public void startGameResultsInTwoCardsDealtToPlayer() throws Exception {
-        Game game = new Game(new Deck());
+        Game game = new Game(StubDeck.playerNotDealtBlackjackHitsAndDoesNotGoBust());
         BlackjackController blackjackController = new BlackjackController(game);
 
         final String redirectPage = blackjackController.startGame();
