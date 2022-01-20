@@ -14,7 +14,6 @@ class GameOutcomeTest {
         game.initialDeal();
 
         game.playerStands(); // make sure the player stands
-        game.dealerTurn(); // dealer needs to take its turn
 
         GameOutcome outcome = game.determineOutcome();
         assertThat(outcome.display())
@@ -45,6 +44,21 @@ class GameOutcomeTest {
                 .isEqualTo(GameOutcome.PLAYER_WINS_BLACKJACK);
         assertThat(game.isPlayerDone())
                 .isTrue();
+    }
+
+    @Test
+    public void standResultsInDealerDrawingCardOnTheirTurn() throws Exception {
+        Deck dealerBeatsPlayerAfterDrawingAdditionalCardDeck =
+                new StubDeck(Rank.TEN,  Rank.QUEEN,
+                             Rank.NINE, Rank.FIVE,
+                             Rank.SIX);
+        Game game = new Game(dealerBeatsPlayerAfterDrawingAdditionalCardDeck);
+        game.initialDeal();
+
+        game.playerStands();
+
+        assertThat(game.dealerHand().cards())
+                .hasSize(3);
     }
 
 }
